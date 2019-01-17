@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-import { APP } from '../constants/ActionTypes';
 import { connect } from 'react-redux'
 import ReposList from './ReposList';
+import { Dispatch } from 'redux'
+import { FetchReposAction, AppActionTypes } from '../actions/reposActions';
+import { Repo } from '../interfaces/reposInterfaces';
 
 interface Props {
-  dispatch: any,
-  reposList: []
+  reposList: Repo[],
+  fetchRepos: Function
 }
 
 interface State {
@@ -14,7 +16,7 @@ interface State {
 }
 
 class ReposContainer extends Component<Props, State> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       username: ''
@@ -26,17 +28,14 @@ class ReposContainer extends Component<Props, State> {
     })
   }
   handleButtonPress = () => {
-    const { dispatch } = this.props
+    const { fetchRepos } = this.props
     const { username } = this.state
 
     if (!username) {
       return false
     }
 
-    dispatch({
-      type: APP.FETCH_REPOS.REQUEST,
-      payload: username
-    })
+    fetchRepos(username)
   }
   render() {
     const { reposList } = this.props
@@ -60,6 +59,15 @@ class ReposContainer extends Component<Props, State> {
 export default connect(
   (state: any) => ({
     reposList: state.reposReducer.reposList
+  }),
+  (dispatch: Dispatch<FetchReposAction>) => ({
+    fetchRepos: (username: string) => 
+      dispatch({
+        type: AppActionTypes.FETCH_REPOS,
+        payload: {
+          username
+        }
+      })
   })
 )(ReposContainer)
 
@@ -69,7 +77,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-    paddingTop: 70
+    paddingTop: 150
   },
   welcome: {
     fontSize: 20,

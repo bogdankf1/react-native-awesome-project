@@ -1,66 +1,51 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Linking } from 'react-native';
-import { connect } from 'react-redux'
+import { StyleSheet, Text, View, Linking, TouchableOpacity } from 'react-native';
+import { Repo } from '../interfaces/reposInterfaces';
 
 interface Props {
-  item: any
+  item: Repo
 }
 
-interface State {}
-
-class ReposListItem extends Component<Props, State> {
+class ReposListItem extends Component<Props> {
   handleLinkPress = () => {
     const { item } = this.props;
     Linking.canOpenURL(item.html_url).then(supported => {
       if (supported) {
         Linking.openURL(this.props.item.html_url);
       } else {
-        console.log('Don\'t know how to open URI: ' + this.props.item.html_url);
+        console.log(`Don't know how to open URI: ${item.html_url}`);
       }
     });
   }
   render() {
     const { item } = this.props
     return (
-      <View style={styles.listItem}>
-        <View style={styles.listItemCell}>
-          <Text style={styles.listItemTitle}>
-            {item.full_name}
-          </Text>
+      <TouchableOpacity onPress={this.handleLinkPress}>
+        <View style={styles.listItem}>
+          <View style={styles.listItemCell}>
+            <Text style={styles.listItemTitle}>
+              {item.name}
+            </Text>
+          </View>
         </View>
-        <View style={styles.listItemCell}>
-          <Text style={styles.listItemLink} onPress={this.handleLinkPress}>
-            {item.html_url}
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
 
-export default connect(
-  state => ({
-
-  })
-)(ReposListItem)
+export default ReposListItem
 
 const styles = StyleSheet.create({
   listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     paddingTop: 5,
     borderTopWidth: 1
   },
   listItemCell: {
-    maxWidth: 150,
     paddingLeft: 5,
     paddingRight: 5,
 
   },
   listItemTitle: {
     fontSize: 20
-  },
-  listItemLink: {
-    textDecorationLine: 'underline',
   }
 });

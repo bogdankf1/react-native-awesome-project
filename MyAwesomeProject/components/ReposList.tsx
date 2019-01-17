@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import { APP } from '../constants/ActionTypes';
-import { connect } from 'react-redux'
 import ReposListItem from './ReposListItem';
+import { Repo } from '../interfaces/reposInterfaces';
 
 interface Props {
-  dispatch: any,
-  list: []
+  list: Repo[]
 }
 
-interface State {}
-
-class ReposList extends Component<Props, State> {
+class ReposList extends Component<Props> {
   render() {
     const { list } = this.props
     return (
@@ -26,11 +22,7 @@ class ReposList extends Component<Props, State> {
   }
 }
 
-export default connect(
-  state => ({
-
-  })
-)(ReposList)
+export default ReposList
 
 const styles = StyleSheet.create({
   container: {
